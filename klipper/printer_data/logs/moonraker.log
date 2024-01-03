@@ -1,0 +1,185 @@
+-------------------- Log Start | Wed Jan  3 00:08:21 2024 --------------------
+data_path: /home/pi/printer_data
+is_default_data_path: False
+config_file: /home/pi/printer_data/config/.moonraker.conf.bkp
+startup_warnings: ["Server configuration error: No files matching include directive [include octoeverywhere-system.cfg]\nLoaded server from most recent working configuration: '/home/pi/printer_data/config/.moonraker.conf.bkp'\nPlease fix the issue in moonraker.conf and restart the server."]
+verbose: False
+debug: False
+asyncio_debug: False
+is_backup_config: True
+is_python_package: False
+instance_uuid: b74687b0386741ddb2e20e9e56d68ff7
+unix_socket_path: /home/pi/printer_data/comms/moonraker.sock
+software_version: v0.8.0-243-g84a8538
+git_branch: master
+git_remote: origin
+git_repo_url: https://github.com/Arksine/moonraker.git
+modified_files: []
+unofficial_components: []
+log_file: /home/pi/printer_data/logs/moonraker.log
+python_version: 3.11.2 (main, May 30 2023, 17:45:26) [GCC 12.2.0]
+launch_args: /home/pi/moonraker-env/bin/python /home/pi/moonraker/moonraker/moonraker.py -d /home/pi/printer_data
+msgspec_enabled: False
+uvloop_enabled: False
+
+#################### Moonraker Configuration ####################
+
+[server]
+host = 0.0.0.0
+port = 7125
+klippy_uds_address = /home/pi/printer_data/comms/klippy.sock
+
+[authorization]
+trusted_clients = 
+	10.0.0.0/8
+	127.0.0.0/8
+	169.254.0.0/16
+	172.16.0.0/12
+	192.168.0.0/16
+	FE80::/10
+	::1/128
+cors_domains = 
+	*.lan
+	*.local
+	*://localhost
+	*://localhost:*
+	*://my.mainsail.xyz
+	*://app.fluidd.xyz
+
+[octoprint_compat]
+
+[history]
+
+[update_manager]
+channel = dev
+refresh_interval = 168
+
+[update_manager mainsail-config]
+type = git_repo
+primary_branch = master
+path = ~/mainsail-config
+origin = https://github.com/mainsail-crew/mainsail-config.git
+managed_services = klipper
+
+[update_manager mainsail]
+type = web
+channel = stable
+repo = mainsail-crew/mainsail
+path = ~/mainsail
+
+[update_manager moonraker-telegram-bot]
+type = git_repo
+path = ~/moonraker-telegram-bot
+origin = https://github.com/nlef/moonraker-telegram-bot.git
+env = ~/moonraker-telegram-bot-env/bin/python
+requirements = scripts/requirements.txt
+install_script = scripts/install.sh
+
+[update_manager octoeverywhere-telegram]
+type = git_repo
+channel = beta
+path = /home/pi/octoeverywhere
+origin = https://github.com/QuinnDamerell/OctoPrint-OctoEverywhere.git
+env = /home/pi/octoeverywhere-env/bin/python
+requirements = requirements.txt
+install_script = install.sh
+managed_services = 
+	octoeverywhere-telegram
+
+[announcements]
+subscriptions = 
+	octoeverywhere
+
+#################################################################
+All Configuration Files:
+/home/pi/printer_data/config/.moonraker.conf.bkp
+#################################################################
+
+Database Versions: pylmdb = 1.4.1, lmdb = (0, 9, 29)
+Unsafe Shutdown Count: 0
+
+System Info:
+
+***python***
+  version: (3, 11, 2, 'final', 0)
+  version_string: 3.11.2 (main, May 30 2023, 17:45:26) [GCC 12.2.0]
+
+***cpu_info***
+  cpu_count: 2
+  bits: 64bit
+  processor: x86_64
+  cpu_desc: Intel(R) Celeron(R) CPU  J1800  @ 2.41GHz
+  serial_number: 
+  hardware_desc: 
+  model: 
+  total_memory: 1909664
+  memory_units: kB
+
+***sd_info***
+
+***distribution***
+  name: Ubuntu 23.04
+  id: ubuntu
+  version: 23.04
+  version_parts: {'major': '23', 'minor': '04', 'build_number': ''}
+  like: debian
+  codename: lunar
+  release_info: {'name': 'Ubuntu', 'version_id': '23.04', 'codename': 'Lunar Lobster', 'id': 'ec2'}
+
+***virtualization***
+  virt_type: none
+  virt_identifier: none
+
+***network***
+
+***canbus***
+
+***Allowed Services***
+  klipper_mcu
+  webcamd
+  MoonCord
+  KlipperScreen
+  moonraker-telegram-bot
+  moonraker-obico
+  sonar
+  crowsnest
+  octoeverywhere
+  ratos-configurator
+  octoeverywhere-telegram
+
+Systemd unit moonraker.service:
+unit_name: moonraker.service
+is_default: True
+manager: systemd
+Properties:
+**Requires=['network-online.target', '-.mount', 'sysinit.target', 'system.slice']
+**After=['basic.target', 'system.slice', 'sysinit.target', 'network-online.target', 'systemd-journald.socket', '-.mount']
+**SupplementaryGroups=['moonraker-admin']
+**EnvironmentFiles=/home/pi/printer_data/systemd/moonraker.env
+**ExecStart=/home/pi/moonraker-env/bin/python $MOONRAKER_ARGS
+**WorkingDirectory=/home/pi/moonraker
+**FragmentPath=/etc/systemd/system/moonraker.service
+**Description=API Server for Klipper SV1
+**User=pi
+
+Systemd unit klipper.service:
+unit_name: klipper.service
+is_default: True
+manager: systemd
+Properties:
+**Requires=['sysinit.target', 'system.slice', '-.mount']
+**After=['basic.target', 'sysinit.target', 'systemd-journald.socket', '-.mount', 'system.slice', 'network-online.target']
+**SupplementaryGroups=[]
+**EnvironmentFiles=/home/pi/printer_data/systemd/klipper.env
+**ExecStart=/home/pi/klippy-env/bin/python $KLIPPER_ARGS
+**WorkingDirectory=/home/pi/klipper
+**FragmentPath=/etc/systemd/system/klipper.service
+**Description=Klipper 3D Printer Firmware SV1
+**User=pi
+Git Repo moonraker: No warnings detected
+Git Repo klipper: No warnings detected
+Git Repo mainsail-config: No warnings detected
+Klipper Version: v0.12.0-58-g25bc649c
+2024-01-03 00:08:21,738 [websockets.py:write_to_socket()] - Websocket closed while writing: 140655546716752
+2024-01-03 00:08:25,768 [websockets.py:on_close()] - Websocket Closed: ID: 140655546716752 Close Code: None, Close Reason: None, Pong Time Elapsed: 45.00
+2024-01-03 00:44:45,307 [authorization.py:_prune_conn_handler()] - Trusted Connection Expired, IP: 192.168.8.9
